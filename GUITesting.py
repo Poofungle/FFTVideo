@@ -31,6 +31,8 @@ with dpg.window(label="Main", tag="main",width=400,height=400):
                 dpg.add_text("Right")
                 dpg.add_button(label="Add", callback=button_callbackadd,user_data="input_text2")
                 dpg.add_button(label="Remove", callback=button_callbackrem)
+
+
 dpg.show_viewport()
 dpg.start_dearpygui()
 dpg.destroy_context()
