@@ -92,7 +92,7 @@ def applyFTT(input_path, output_path):
     pixels = math.floor((pixels / video_width) / 3) * video_width
     pixels = (pixels // video_width // 2) * 2 * video_width
     print(f'Wanting to do {pixels / video_width}')
-    pixels = min(max(pixels, video_width * 64),video_width*video_height)
+    pixels = min(max(pixels, video_width * 50),video_width*video_height)
     print(f'Doing do {pixels / video_width}')
     h=(int)(pixels / video_width)
     print(pixels)
@@ -154,13 +154,33 @@ def applyFTT(input_path, output_path):
         video = decoder[:].to(DEVICE, dtype=torch.float32)  # (T, C, H, W)
         print(f"Decoding {b - time.time()}")
         b = time.time()
-        video = torch.fft.rfft(video, dim=0)
-        video = torch.abs(video)
-        video = torch.fft.irfft(video, dim=0, n=frame_count)
-
+        print(video.shape)
+        a=0
+        b=256
+        video = torch.ops.aten.abs_(self=torch.ops.aten.fmod.Scalar(self=torch.ops.aten.fft_irfft(self=torch.ops.aten.abs(self=torch.ops.aten.fft_rfft(self=video,dim=a)),dim=a),other=b))
+        #video = torch.fft.rfft(video, dim=0)
         #video = torch.abs(video)
-        video = torch.floor(video%256).to(torch.uint8)
-        video = video.clamp(0, 255).to(torch.uint8)
+        #video = torch.fft.irfft(video, dim=0, n=frame_count)
+
+        #video = torch.abs_(video)
+        #video = torch.floor(video%256)
+        video = video.clamp_(0, 255)
+        video=video.to(torch.uint8)
+
+        T, C, H, W = video.shape
+
+        # 1. Calculate target H and W (must be >= 50 and even)
+        target_h = max(50, H + (H % 2))
+        target_w = max(50, W + (W % 2))
+
+        # 2. Calculate required right/bottom padding
+        pad_h = target_h - H
+        pad_w = target_w - W
+
+        # 3. Pad only if needed (tuple format: pad_left, pad_right, pad_top, pad_bottom)
+        if pad_h > 0 or pad_w > 0:
+            video = torch.nn.functional.pad(video, (0, pad_w, 0, pad_h), mode="constant", value=0)
+
         print(f"Process {b - time.time()}")
         b = time.time()
 

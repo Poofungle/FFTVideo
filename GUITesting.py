@@ -13,7 +13,7 @@ def button_callbackrem(sender, app_data, user_data):
 
 
 dpg.create_context()
-dpg.create_viewport()
+dpg.create_viewport(title= "Test")
 dpg.setup_dearpygui()
 
 with dpg.window(label="Main", tag="main",width=400,height=400):
@@ -33,6 +33,10 @@ with dpg.window(label="Main", tag="main",width=400,height=400):
                 dpg.add_button(label="Remove", callback=button_callbackrem)
 
 
+with dpg.window(label="Main2", tag="main2",width=400,height=400):
+    dpg.add_text("Test")
+
 dpg.show_viewport()
+dpg.set_primary_window("main",True)
 dpg.start_dearpygui()
 dpg.destroy_context()
