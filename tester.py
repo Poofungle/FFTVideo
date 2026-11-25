@@ -33,3 +33,4 @@ for s in schemas:
 with open("atens.json", "w") as f:
     json.dump(parsed_ops, f, indent=2)
 print(len(parsed_ops))
+

@@ -7,7 +7,7 @@ import torch
 import importlib
 from operator import attrgetter
 
-
+EDITOR = "NodeEditor"
 def get_object_from_path(dotted_path: str):
   parts = dotted_path.split(".")
   obj = importlib.import_module(parts[0])
@@ -104,8 +104,8 @@ def opentextbox(sender, app_data, user_data):
 
 with dpg.window(label="Main", tag="main"):
     with dpg.table(header_row=False,resizable=True,policy=dpg.mvTable_SizingStretchProp):
-        dpg.add_table_column(init_width_or_weight=1)
-        dpg.add_table_column(init_width_or_weight=1)
+        dpg.add_table_column(init_width_or_weight=1.5)
+        dpg.add_table_column(init_width_or_weight=3)
         dpg.add_table_column(init_width_or_weight=1)
         with dpg.table_row():
             with dpg.group():
@@ -159,10 +159,22 @@ with dpg.window(label="Main", tag="main"):
                     delink_callback=delink_cb):
                     pass
             with dpg.child_window():
-                dpg.add_input_text(label="Input")
-                dpg.add_text("Right")
+                with dpg.group():
+                    dpg.add_text("Other")
+                    with dpg.child_window(height=200, resizable_y=True, border=True):
+                        dpg.add_text("Save/load")
+                        dpg.add_input_text(label="Name")
+                        dpg.add_button(label="Save")
+                        #will save selected nodes into a file
+                        dpg.add_button(label="...")
+                        #the saved files will show here are drag and drops so you can drag saved things into the view
+                    with dpg.child_window(border=True):
+                        dpg.add_button(label="Run")
 
-EDITOR = "NodeEditor"
+
+
+
+
 def delete_selected(sender=None, app_data=None):
     for link in dpg.get_selected_links(EDITOR):
         dpg.delete_item(link)

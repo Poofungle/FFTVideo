@@ -155,12 +155,12 @@ def applyFTT(input_path, output_path):
         print(f"Decoding {b - time.time()}")
         b = time.time()
         print(video.shape)
-        a=0
-        b=256
-        video = torch.ops.aten.abs_(self=torch.ops.aten.fmod.Scalar(self=torch.ops.aten.fft_irfft(self=torch.ops.aten.abs(self=torch.ops.aten.fft_rfft(self=video,dim=a)),dim=a),other=b))
-        #video = torch.fft.rfft(video, dim=0)
-        #video = torch.abs(video)
-        #video = torch.fft.irfft(video, dim=0, n=frame_count)
+        #a=0
+        #b=256
+        #video = torch.ops.aten.abs_(self=torch.ops.aten.fmod.Scalar(self=torch.ops.aten.fft_irfft(self=torch.ops.aten.abs(self=torch.ops.aten.fft_rfft(self=video,dim=a)),dim=a),other=b))
+        video = torch.fft.rfft(video, dim=0)
+        video = torch.abs(video)
+        video = torch.fft.irfft(video, dim=0, n=frame_count)
 
         #video = torch.abs_(video)
         #video = torch.floor(video%256)
